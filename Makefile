@@ -42,7 +42,7 @@ BUILD		:=	build
 SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
-ROMFS		:=	romfs
+ROMFS		:=	#romfs - UNCOMMENT WHEN NEEDING ROMFS
 
 APP_TITLE   := SDL2+mixer+image Demo
 APP_AUTHOR  := carstene1ns
