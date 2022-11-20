@@ -39,9 +39,9 @@ include $(DEVKITPRO)/libnx/switch_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source
+SOURCES		:=	source pokemon-gold-randomizer/src
 DATA		:=	data
-INCLUDES	:=	include
+INCLUDES	:=	pokemon-gold-randomizer/src
 ROMFS		:=	#romfs - UNCOMMENT WHEN NEEDING ROMFS
 
 APP_TITLE   := SDL2+mixer+image Demo

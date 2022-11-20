@@ -24,7 +24,10 @@
 #include <unistd.h>
 #include <string>
 
+#include "rom.h"
+
 #include <switch.h>
+
 
 // some switch buttons
 #define JOY_A     0
@@ -52,6 +55,23 @@ bool selected_options[MAX_MENU_ITEMS] = {true};
 
 void randomize_rom() {
 	// Go through selected options and enable that for the randomizing
+	Rom rom = Rom();
+	if (rom.load("roms/gbc/Pokemon - Gold Version (UE) [C][!].gbc")) {
+		printf("Loaded successfully\n");
+	} else {
+		printf("Load was unsuccessful\n");
+		return;
+	}
+
+
+	// TODO somehow pass through selected option to this run
+	rom.run();
+	// TODO add filename to save to
+	if (rom.save()) {
+		printf("Save was successful\n");
+	} else {
+		printf("Save was unsuccessful\n");
+	}
 }
 
 int main(int argc, char** argv) {
@@ -76,6 +96,7 @@ int main(int argc, char** argv) {
 
 
 	while (!exit_requested && appletMainLoop()) {
+		consoleClear();
 
 		padUpdate(&pad);
 
@@ -96,8 +117,12 @@ int main(int argc, char** argv) {
 			selected_options[menu_cursor] = !selected_options[menu_cursor];
 		}
 
-		if (buttons_pressed & HidNpadButton_X) {
+		if (buttons_pressed & HidNpadButton_B) {
+			printf("About to call it\n");
 			randomize_rom();
+			printf("Finished randomize\n");
+			consoleUpdate(NULL);
+			sleep(2);
 			exit_requested = 1;
 			continue;
 		}
@@ -110,7 +135,6 @@ int main(int argc, char** argv) {
 
 		if (menu_cursor < 0) menu_cursor = MAX_MENU_ITEMS - 1;
 		if (menu_cursor >= MAX_MENU_ITEMS) menu_cursor = 0;
-		consoleClear();
 		printf("\x1b[1;1HMenu cursor: %i\n", menu_cursor);
 		printf("Selected option: %s. Enabled: %d\n", menu_items[menu_cursor].c_str(), selected_options[menu_cursor]);
 		consoleUpdate(NULL);
