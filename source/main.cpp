@@ -25,6 +25,7 @@
 #include <string>
 
 #include "rom.h"
+#include "randomization_options.h"
 
 #include <switch.h>
 
@@ -44,14 +45,16 @@
 #define SCREEN_W 1280
 #define SCREEN_H 720
 
-const int MAX_MENU_ITEMS = 9;
+const int MAX_MENU_ITEMS = 11;
 
 const std::string menu_items[MAX_MENU_ITEMS] = {
 	"Randomize intro pokemon", "Randomize starter pokemon", "Randomize evolutions", "Randomize wild pokemon", 
 	"Randomize trainers", "Randomize gift pokemon", "Randomize static pokemon",
-	"Randomize game corner pokemon", "Randomize static items" 
+	"Randomize game corner pokemon", "Randomize static items", "Enable shiny mode", "Randomize pokemon colour palettes"
 };
 bool selected_options[MAX_MENU_ITEMS] = {true};
+
+std::vector<RandomizationOptions> convert_to_randomization_options();
 
 void randomize_rom() {
 	// Go through selected options and enable that for the randomizing
@@ -64,14 +67,55 @@ void randomize_rom() {
 	}
 
 
-	// TODO somehow pass through selected option to this run
-	rom.run();
+	auto randomization_options = convert_to_randomization_options();
+	rom.run(randomization_options);
 	// TODO add filename to save to
 	if (rom.save()) {
 		printf("Save was successful\n");
 	} else {
 		printf("Save was unsuccessful\n");
 	}
+}
+
+std::vector<RandomizationOptions> convert_to_randomization_options() {
+	// Simple enough, I guess
+	std::vector<RandomizationOptions> randomization_options;
+	randomization_options.reserve(MAX_MENU_ITEMS);
+	if (selected_options[0]) {
+		randomization_options.push_back(RANDOMIZE_INTRO_POKEMON);
+	}
+	if (selected_options[1]) {
+		randomization_options.push_back(RANDOMIZE_STARTER_POKEMON);
+	}
+	if (selected_options[2]) {
+		randomization_options.push_back(RANDOMIZE_EVOLUTIONS);
+	}
+	if (selected_options[3]) {
+		randomization_options.push_back(RANDOMIZE_WILD_POKEMON);
+	}
+	if (selected_options[4]) {
+		randomization_options.push_back(RANDOMIZE_TRAINERS);
+	}
+	if (selected_options[5]) {
+		randomization_options.push_back(RANDOMIZE_GIFT_POKEMON);
+	}
+	if (selected_options[6]) {
+		randomization_options.push_back(RANDOMIZE_STATIC_POKEMON);
+	}
+	if (selected_options[7]) {
+		randomization_options.push_back(RANDOMIZE_GAME_CORNER_POKEMON);
+	}
+	if (selected_options[8]) {
+		randomization_options.push_back(RANDOMIZE_STATIC_ITEMS);
+	}
+	if (selected_options[9]) {
+		randomization_options.push_back(ENABLE_SHINY_MODE);
+	}
+	if (selected_options[10]) {
+		randomization_options.push_back(RANDOMIZE_POKEMON_PALLETES);
+	}
+
+	return randomization_options;
 }
 
 int main(int argc, char** argv) {
