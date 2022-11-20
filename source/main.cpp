@@ -181,6 +181,7 @@ int main(int argc, char** argv) {
 		if (menu_cursor >= MAX_MENU_ITEMS) menu_cursor = 0;
 		printf("\x1b[1;1HMenu cursor: %i\n", menu_cursor);
 		printf("Selected option: %s. Enabled: %d\n", menu_items[menu_cursor].c_str(), selected_options[menu_cursor]);
+		printf("B to randomize. A to toggle option. Up and Down (D PAD) to scroll\n");
 		consoleUpdate(NULL);
 	}
 

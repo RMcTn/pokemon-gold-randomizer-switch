@@ -44,8 +44,8 @@ DATA		:=	data
 INCLUDES	:=	pokemon-gold-randomizer/src
 ROMFS		:=	#romfs - UNCOMMENT WHEN NEEDING ROMFS
 
-APP_TITLE   := SDL2+mixer+image Demo
-APP_AUTHOR  := carstene1ns
+APP_TITLE   := Pokemon gold randomizer
+APP_AUTHOR  := RMcTn
 
 #---------------------------------------------------------------------------------
 # options for code generation
