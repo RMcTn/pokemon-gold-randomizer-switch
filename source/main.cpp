@@ -1,24 +1,3 @@
-/* Mini SDL Demo
- * featuring SDL2 + SDL2_mixer + SDL2_image + SDL2_ttf
- * on Nintendo Switch using libnx
- *
- * Copyright 2018 carsten1ns
- *           2020 WinterMute
- *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- *
- */
-
 #include <cstdio>
 #include <time.h>
 #include <unistd.h>
@@ -28,22 +7,6 @@
 #include "randomization_options.h"
 
 #include <switch.h>
-
-
-// some switch buttons
-#define JOY_A     0
-#define JOY_B     1
-#define JOY_X     2
-#define JOY_Y     3
-#define JOY_PLUS  10
-#define JOY_MINUS 11
-#define JOY_LEFT  12
-#define JOY_UP    13
-#define JOY_RIGHT 14
-#define JOY_DOWN  15
-
-#define SCREEN_W 1280
-#define SCREEN_H 720
 
 const int MAX_MENU_ITEMS = 11;
 
