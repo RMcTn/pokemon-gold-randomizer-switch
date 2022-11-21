@@ -10,16 +10,17 @@
 
 const int MAX_MENU_ITEMS = 11;
 
+const int KEYBOARD_BUFFER_SIZE = 500;
+
 const std::string menu_items[MAX_MENU_ITEMS] = {
 	"Randomize intro pokemon", "Randomize starter pokemon", "Randomize evolutions", "Randomize wild pokemon", 
 	"Randomize trainers", "Randomize gift pokemon", "Randomize static pokemon",
 	"Randomize game corner pokemon", "Randomize static items", "Enable shiny mode", "Randomize pokemon colour palettes"
 };
 bool selected_options[MAX_MENU_ITEMS] = {true};
-
 std::vector<RandomizationOptions> convert_to_randomization_options();
 
-void randomize_rom() {
+void randomize_rom(std::string filename_to_save) {
 	// Go through selected options and enable that for the randomizing
 	Rom rom = Rom();
 	if (rom.load("roms/gbc/Pokemon - Gold Version (UE) [C][!].gbc")) {
@@ -32,8 +33,18 @@ void randomize_rom() {
 
 	auto randomization_options = convert_to_randomization_options();
 	rom.run(randomization_options);
-	// TODO add filename to save to
-	if (rom.save()) {
+
+	const std::string gbc_file_extension = ".gbc";
+	if (filename_to_save.size() <= 4) {
+		// Can't possibly be a filename with the .gbc extension, so add it to the end
+		// Possible the user gives us something like ".gbc" or "....", not handling these for now 
+		filename_to_save.append(gbc_file_extension);
+	}
+	if (filename_to_save.substr(filename_to_save.size() - gbc_file_extension.size()) != gbc_file_extension) {
+		filename_to_save.append(gbc_file_extension);
+	}
+	printf("Filename is %s\n", filename_to_save.c_str());
+	if (rom.save(filename_to_save)) {
 		printf("Save was successful\n");
 	} else {
 		printf("Save was unsuccessful\n");
@@ -95,12 +106,22 @@ int main(int argc, char** argv) {
 	int exit_requested = 0;
 
 	int menu_cursor = 0;
-
-
 	for (int i = 0; i < MAX_MENU_ITEMS; i++) {
 		selected_options[i] = true;
 	}
 
+	Result rc;
+	SwkbdConfig keyboard;
+	char keyboard_buffer[KEYBOARD_BUFFER_SIZE] = {0};
+	rc = swkbdCreate(&keyboard, 0);
+	printf("swkbdCreate(): 0x%x\n", rc);
+
+	if (R_SUCCEEDED(rc)) {
+		swkbdConfigMakePresetDefault(&keyboard);
+	} 
+	const std::string keyboard_guide_text = "Filename to save (Max " + std::to_string(KEYBOARD_BUFFER_SIZE) + " characters)";
+
+	// TODO ROM file select 
 
 	while (!exit_requested && appletMainLoop()) {
 		consoleClear();
@@ -124,10 +145,16 @@ int main(int argc, char** argv) {
 			selected_options[menu_cursor] = !selected_options[menu_cursor];
 		}
 
+
 		if (buttons_pressed & HidNpadButton_B) {
-			printf("About to call it\n");
-			randomize_rom();
-			printf("Finished randomize\n");
+			std::string filename;
+			swkbdConfigSetGuideText(&keyboard, keyboard_guide_text.c_str());
+			rc = swkbdShow(&keyboard, keyboard_buffer, sizeof(keyboard_buffer));
+			if (R_SUCCEEDED(rc)) {
+				filename = std::string(keyboard_buffer);
+			}
+			randomize_rom(filename);
+			printf("Finished randomizer\n");
 			consoleUpdate(NULL);
 			sleep(2);
 			exit_requested = 1;
@@ -147,7 +174,7 @@ int main(int argc, char** argv) {
 		printf("B to randomize. A to toggle option. Up and Down (D PAD) to scroll\n");
 		consoleUpdate(NULL);
 	}
-
+	swkbdClose(&keyboard);
 	consoleExit(NULL);
 
 	socketExit();
